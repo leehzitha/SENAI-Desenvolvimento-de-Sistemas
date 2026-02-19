@@ -1,7 +1,13 @@
 import express, { Request, response, Response, Router } from 'express';
 
+interface Person {
+    name: string
+    lastName: string
+    id: number
+}
+
 const router: Router = express.Router();
-const people: object[] = [];
+const people: Person[] = [];
 
 router
     .post('/register', (req: Request, res: Response) => {
@@ -16,9 +22,8 @@ router
     .get('/users/:id', (req: Request, res: Response) => {
         const {id} = req.params
         let convertedId = Number(id)
-        let mano = people.find((id) => id == convertedId)
-        console.log(mano)
-        res.status(200).send(`Buscando usuário  ${{mano}}`)
+        let mano = people.find((person) => person.id == convertedId)
+        res.status(200).send({person: mano})
     })
     .get('/filter', (req: Request, res: Response) => {
         const { name, lastName } = req.query
