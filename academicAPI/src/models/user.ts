@@ -1,3 +1,4 @@
+import { truncate } from "fs/promises";
 import mongoose, { Schema, Document} from "mongoose";
 
 interface IUser extends Document {
@@ -10,7 +11,7 @@ interface IUser extends Document {
 }
 
 const userSchema: Schema = new Schema({
-    id: { type: Number, required: true },
+    id: { type: Number, required: true, unique: true},
     name: { type: String, required: true },
     email: { type: String, required: true },
     role: { type: String, required: false },
@@ -18,6 +19,6 @@ const userSchema: Schema = new Schema({
     createdAt: { type: Date, required: true }
 });
 
-const Userr = mongoose.model<IUser>('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
-export default Userr;
+export default User;

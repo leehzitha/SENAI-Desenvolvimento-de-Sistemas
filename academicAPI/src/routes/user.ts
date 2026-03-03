@@ -9,7 +9,7 @@ router.get('/usuarios', UserController.getUsers);
 router.post('/usuarios', validateRegister, UserController.registerUser);
 router.put('/usuarios/:id', UserController.updateUser);
 router.get('/usuarios/:id', UserController.getUserByID);
-router.patch('/usuarios/:id', UserController.updateUserPatch);
+// router.patch('/usuarios/:id', UserController.updateUserPatch);
 router.delete('/usuarios/:id', UserController.deleteUser);
 
 export default router;

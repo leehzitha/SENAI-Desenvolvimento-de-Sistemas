@@ -1,18 +1,6 @@
 import { Request, Response} from 'express';
 import User from '../models/user.ts'
 
-
-interface User {
-    id: number
-    name: string
-    email: string
-    type: "student" | "teacher" | "coordenator"
-    active: boolean
-    createdAt: Date
-}
-const users : User[] = []; 
-
-
 class UserController {
     static async getUsers(req: Request, res: Response){
         const users = await User.find()
@@ -20,24 +8,8 @@ class UserController {
     }
 
     static async registerUser(req: Request, res: Response){
-        const { id, name, email, role } = req.body; // All users start as active (true)
-
-        // data validation
-        if (!email || !name || !id) {
-            res.status(400).send("Name, email and ID are required.");
-            return;
-        }
-
-        let checkEmail = verifyEmail(email, res);
-        let checkID = users.find((user) => user.id == id)
-
-        if (!checkEmail) return;
-
-        if (checkID) {
-            res.status(400).send("ID already in use!");
-            return;
-        }
-
+        const { id, name, email, role } = req.body; 
+        
         try {
             const user = new User({
                 id : Number(id), 
@@ -59,7 +31,7 @@ class UserController {
     static async getUserByID (req: Request, res: Response) {
         const {id} = req.params;
 
-        const result = findUserById(id as string, res)
+        const result = User.findById(Number(id));
 
         if (!result) return;
     
@@ -100,57 +72,66 @@ class UserController {
         // res.status(200).send(`User: ${name} successfully updated!`)
     }
 
-    static async updateUserPatch (req: Request, res: Response) {
-        const { id } = req.params;
-        const update = req.body;
+    // static async updateUserPatch (req: Request, res: Response) {
+    //     const { id } = req.params;
+    //     const update = req.body;
 
-        const user = findUserById(id as string, res)
+    //     const user = User.findById(Number(id));
 
-        if (!user) return;
+    //     if (!user) return;
 
-        if (update.id) {
-            res.status(400).send("You can't change ID using PATCH");
-            return;
-        }
-        Object.assign(user, req.body)
+    //     if (update.id) {
+    //         res.status(400).send("You can't change ID using PATCH");
+    //         return;
+    //     }
+    //     Object.assign(user, req.body)
         
-        res.status(200).send(`User ${update.name} updated successfully!`)
-    }
+    //     res.status(200).send(`User ${update.name} updated successfully!`)
+    // }
 
     static async deleteUser (req: Request, res: Response) {
         const { id } = req.params;
 
-        const user = findUserById(id as string, res);
+        // const user = findUserById(id as string, res);
 
-        if (!user) return;
+        // if (!user) return;
 
-        const idx = users.indexOf(user);
+        // const idx = users.indexOf(user);
 
-        users.splice(idx, 1);
+        // users.splice(idx, 1);
+
+        const user = await User.findByIdAndDelete(Number(id));
+
+        if (user) {
+            res.status(200).send(`User id ${id} deleted`);
+            return;
+        }
+
+        res.status(400).send('User not found');
         
-        res.status(200).send(`User id ${id} deleted`);
+        
     }
 
 }
 
 
-function findUserById(id: string, res: Response): User | null {
-    const find = users.find(user => user.id === Number(id));
-    if (find) {
-        return find;
-    }
-    res.status(404).send("User not found!");
-    return null;
-}
+// function findUserById(id: string, res: Response): User | null {
+//     const find = users.find(user => user.id === Number(id));
+//     if (find) {
+//         return find;
+//     }
+//     res.status(404).send("User not found!");
+//     return null;
+// }
 
-function verifyEmail(email: string, res: Response): User | null {
-    const find = users.find(user => user.email == email);
+// function verifyEmail(email: string, res: Response): User | null {
+//     const find = users.find(user => user.email == email);
 
-    if (find) {
-        res.status(400).send("Email already in use!");
-        return find;
-    }
+//     if (find) {
+//         res.status(400).send("Email already in use!");
+//         return find;
+//     }
 
-    return null;
-}
+//     return null;
+// }
 export default UserController;
