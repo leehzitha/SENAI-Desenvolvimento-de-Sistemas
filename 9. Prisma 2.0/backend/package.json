@@ -13,7 +13,6 @@
     "@types/config": "^3.3.5",
     "@types/cors": "^2.8.19",
     "@types/crypto-js": "^4.2.2",
-    "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.3.0",
     "tsx": "^4.21.0",
@@ -21,6 +20,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@types/express": "^5.0.6",
     "axios": "^1.14.0",
     "config": "^4.4.0",
     "cors": "^2.8.6",
